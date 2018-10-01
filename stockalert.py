@@ -4,14 +4,17 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from slackclient import SlackClient
+import json
 import platform
 
 
-
+# set chromedriver
 if platform.system() == 'Windows':
     chromedriver = r'C:\xxx\MyPythonScripts\chromedriver235.exe'
-else: # linux, mac
+else:
     chromedriver = r'/Users/xxx/MyPythonScripts/chromedriver_mac235'
+
 
 # set headless Chrome
 options = Options()
@@ -20,15 +23,40 @@ options.add_argument('--disable-gpu')
 driver=webdriver.Chrome(chromedriver, chrome_options=options)
 
 
-companies = [('A17U','Ascendas REIT')]
+# slack
+token = 'x'
+slack_client = SlackClient(token)
+channel_id = 'CD46UTW1K'
+
+
+# stock info
+companies = [('A17U','Ascendas REIT'), 
+             ('C2PU', 'Parkway REIT'),
+             ('S68', 'SGX'),
+             ('ME8U', 'Mapletree Industrial Trust'),
+             ('N2IU', 'Mapletree Commercial Trust'),
+             ('J69U', 'Frasers Centrepoint Trust'),
+             ('BWQU', 'Frasers Logistics & Industrial Trust'),
+             ('C38U', 'Capitamall Trust'),
+             ('A7RU', 'Keppel Infrastructure Trust'),
+             ('AJBU', 'Keppel DC REIT')]
 template_url = 'http://sgx.com/wps/portal/sgxweb/home/company_disclosure/stockfacts?page=1&code='
 
 
+# send message to slack app
+def send_message(channel_id, message): 
+    slack_client.api_call("chat.postMessage", 
+                          channel=channel_id, 
+                          text=message, 
+                          username='sgx-alert')
 
+# main script, webscrape for data
 for code, company in companies:
+    print('scanning {}...'.format(company))
+
     url = '{}{}'.format(template_url,code)
-    # while test(code,url) == '-':
     driver.get(url)
+
     # read from iframe
     iframeElement = driver.find_element_by_tag_name('iframe')
     driver.switch_to.frame(iframeElement)
@@ -44,14 +72,21 @@ for code, company in companies:
     week_52_low = float(week_52_high_low.split(' ')[2])
     price_book = float(tabcontent[16].getText())
     dividend_yield = tabcontent[18].getText()
-
     current_price = float(soup.select('span .price')[1].getText())
 
 
+    link = 'More in SGX StockFacts {}'.format(url)
     if current_price <= week_52_low:
-        print(company)
-        print('Current Price ${} has reached 52-week low!'.format(current_price))
+        message = 'Current Price (${}) has reached 52-week low!'.format(current_price)
+        send_message(channel_id, company)
+        send_message(channel_id, message)
+        send_message(channel_id, link)
+        send_message(channel_id, '\n')
     if price_book <= 1:
-        print(company)
-        print('Current Price ${} is below price-book ratio!'.format(current_price))
+        message = 'Current Price (${}) is below price-book ratio at {}!'.format(current_price,price_book)
+        send_message(channel_id, company)
+        send_message(channel_id, message)
+        send_message(channel_id, link)
+        send_message(channel_id, '\n')
+
 
