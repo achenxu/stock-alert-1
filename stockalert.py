@@ -24,7 +24,7 @@ driver=webdriver.Chrome(chromedriver, chrome_options=options)
 
 
 # slack
-token = 'xoxp-445868312868-447103533783-445487998289-2d49bbaf25943bae8a4663bad3aea75b'
+token = 'xxx'
 slack_client = SlackClient(token)
 channel_id = 'CD46UTW1K'
 
@@ -62,6 +62,7 @@ for code, company in companies:
     driver.switch_to.frame(iframeElement)
     html = driver.page_source.encode('utf-8')
 
+    # cook the soup
     soup = BeautifulSoup(html, 'html.parser')
     tabcontent = soup.select('div .normal.right')
     
