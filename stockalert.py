@@ -13,7 +13,7 @@ import platform
 if platform.system() == 'Windows':
     chromedriver = r'C:\xxx\MyPythonScripts\chromedriver235.exe'
 else:
-    chromedriver = r'/Users/siyang/Dropbox/Scripts/MyPythonScripts/chromedriver_mac235'
+    chromedriver = r'/Users/xxx/MyPythonScripts/chromedriver_mac235'
 
 
 # set headless Chrome
@@ -65,6 +65,7 @@ for code, company in companies:
     soup = BeautifulSoup(html, 'html.parser')
     tabcontent = soup.select('div .normal.right')
     
+    # retrieve metrics from SGX
     previous_open_price = tabcontent[0].getText()
     previous_high_low = tabcontent[1].getText()
     previous_close_price = tabcontent[2].getText()
@@ -72,21 +73,17 @@ for code, company in companies:
     week_52_low = float(week_52_high_low.split(' ')[2])
     price_book = float(tabcontent[16].getText())
     dividend_yield = tabcontent[18].getText()
-    current_price = 0.1
-    # float(soup.select('span .price')[1].getText())
+    current_price = float(soup.select('span .price')[1].getText())
 
 
+    # set alert conditions
     link = 'More in SGX StockFacts {}'.format(url)
     if current_price <= week_52_low:
-        message = 'Current Price (${}) has reached 52-week low!'.format(current_price)
-        send_message(channel_id, '~~{}~~'.format(company))
+        message = '~~{}~~\nCurrent Price (${}) has reached 52-week low $({})!\n{}'.format(company, current_price, week_52_low, link)
         send_message(channel_id, message)
-        send_message(channel_id, link)
         send_message(channel_id, '\n')
     if price_book <= 1:
-        message = 'Current Price (${}) is below price-book ratio at {}!'.format(current_price,price_book)
-        send_message(channel_id, '~~{}~~'.format(company))
+        message = '~~{}~~\nCurrent Price (${}) is below price-book ratio at {}!\n{}'.format(company, current_price,price_book, link)
         send_message(channel_id, message)
-        send_message(channel_id, link)
         send_message(channel_id, '\n')
 
