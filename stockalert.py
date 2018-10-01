@@ -13,7 +13,7 @@ import platform
 if platform.system() == 'Windows':
     chromedriver = r'C:\xxx\MyPythonScripts\chromedriver235.exe'
 else:
-    chromedriver = r'/Users/xxx/MyPythonScripts/chromedriver_mac235'
+    chromedriver = r'/Users/siyang/Dropbox/Scripts/MyPythonScripts/chromedriver_mac235'
 
 
 # set headless Chrome
@@ -24,7 +24,7 @@ driver=webdriver.Chrome(chromedriver, chrome_options=options)
 
 
 # slack
-token = 'x'
+token = 'xoxp-445868312868-447103533783-445487998289-2d49bbaf25943bae8a4663bad3aea75b'
 slack_client = SlackClient(token)
 channel_id = 'CD46UTW1K'
 
@@ -72,21 +72,21 @@ for code, company in companies:
     week_52_low = float(week_52_high_low.split(' ')[2])
     price_book = float(tabcontent[16].getText())
     dividend_yield = tabcontent[18].getText()
-    current_price = float(soup.select('span .price')[1].getText())
+    current_price = 0.1
+    # float(soup.select('span .price')[1].getText())
 
 
     link = 'More in SGX StockFacts {}'.format(url)
     if current_price <= week_52_low:
         message = 'Current Price (${}) has reached 52-week low!'.format(current_price)
-        send_message(channel_id, company)
+        send_message(channel_id, '~~{}~~'.format(company))
         send_message(channel_id, message)
         send_message(channel_id, link)
         send_message(channel_id, '\n')
     if price_book <= 1:
         message = 'Current Price (${}) is below price-book ratio at {}!'.format(current_price,price_book)
-        send_message(channel_id, company)
+        send_message(channel_id, '~~{}~~'.format(company))
         send_message(channel_id, message)
         send_message(channel_id, link)
         send_message(channel_id, '\n')
-
 
