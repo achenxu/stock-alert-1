@@ -10,3 +10,6 @@ This script aims to achieve that. It uses python to obtain price and metrics inf
  * Chromedriver
 
  * Slack application
+
+
+ ![screenshot](https://github.com/mapattacker/stock-alert/blob/master/slack_image.jpg)
