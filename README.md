@@ -5,7 +5,7 @@ It appears that most, if not all stock apps in the market provide alerts based o
 This script aims to achieve that. It uses python to obtain price and metrics information from SGX Stockfacts website and if conditions are met, an alert message will be sent to the messenging app Slack.
 
 ### Dependencies
- * Python 3.6: selenium, BeautifulSoup, SlackClient
+ * Python 3.6: `selenium, BeautifulSoup, SlackClient`
 
  * Chromedriver
 
