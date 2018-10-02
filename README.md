@@ -12,4 +12,4 @@ This script aims to achieve that. It uses python to obtain price and metrics inf
  * Slack application
 
 
- ![screenshot](https://github.com/mapattacker/stock-alert/blob/master/slack_image.jpg)
+ ![screenshot](https://github.com/mapattacker/stock-alert/blob/master/slack_image.png)
