@@ -137,7 +137,6 @@ def main_script(companies, template_url, driver):
                                                                                 alert, current_price, average_price, week_52_low, week_52_high, dividend_yield, price_book, url)
                 send_message(channel_id, message, chart)
                 
-
                 flag = False
                 
             except Exception as e:
